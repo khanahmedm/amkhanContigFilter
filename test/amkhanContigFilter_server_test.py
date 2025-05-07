@@ -76,7 +76,7 @@ class amkhanContigFilterTest(unittest.TestCase):
 
     # NOTE: According to Python unittest naming rules test method names should start from 'test'. # noqa
     # NOTE: According to Python unittest naming rules test method names should start from 'test'. # noqa
-    def my_test_run_amkhanContigFilter_ok(self):
+    def test_run_amkhanContigFilter_ok(self):
         # call your implementation
         ret = self.serviceImpl.run_amkhanContigFilter(self.ctx,
                                                 {'workspace_name': self.wsName,
@@ -89,14 +89,14 @@ class amkhanContigFilterTest(unittest.TestCase):
         self.assertEqual(ret[0]['n_contigs_removed'], 1)
         self.assertEqual(ret[0]['n_contigs_remaining'], 2)
 
-    def my_test_run_amkhanContigFilter_min_len_negative(self):
+    def test_run_amkhanContigFilter_min_len_negative(self):
         with self.assertRaisesRegex(ValueError, 'min_length parameter cannot be negative'):
             self.serviceImpl.run_amkhanContigFilter(self.ctx,
                                               {'workspace_name': self.wsName,
                                                'assembly_input_ref': '1/fake/3',
                                                'min_length': '-10'})
 
-    def my_test_run_amkhanContigFilter_min_len_parse(self):
+    def test_run_amkhanContigFilter_min_len_parse(self):
         with self.assertRaisesRegex(ValueError, 'Cannot parse integer from min_length parameter'):
             self.serviceImpl.run_amkhanContigFilter(self.ctx,
                                               {'workspace_name': self.wsName,
@@ -113,7 +113,9 @@ class amkhanContigFilterTest(unittest.TestCase):
             'max_length': 1000000
         })
         print(result)
-        # TODO -- assert some things (later)
+        self.assertTrue(len(result[0]['filtered_assembly_ref']))
+        self.assertTrue(len(result[0]['report_name']))
+        self.assertTrue(len(result[0]['report_ref']))
 
     def test_invalid_params(self):
         impl = self.serviceImpl
@@ -139,3 +141,28 @@ class amkhanContigFilterTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             impl.run_amkhanContigFilter_max(ctx, {'workspace_name': ws, 'assembly_ref': 1,
                 'min_length': 1, 'max_length': 1000000})
+    
+    def test_run_amkhanContigFilter_test_min(self):
+        ref = "79/16/1"
+        params = {
+            'workspace_name': self.wsName,
+            'assembly_ref': ref,
+            'min_length': 200000,
+            'max_length': 6000000
+        }
+        result = self.serviceImpl.run_amkhanContigFilter_max(self.ctx, params)
+        self.assertEqual(result[0]['n_total'], 2)
+        self.assertEqual(result[0]['n_remaining'], 1)
+
+    def test_run_amkhanContigFilter_test_max(self):
+        ref = "79/16/1"
+        params = {
+            'workspace_name': self.wsName,
+            'assembly_ref': ref,
+            'min_length': 100000,
+            'max_length': 4000000
+        }
+        result = self.serviceImpl.run_amkhanContigFilter_max(self.ctx, params)
+        self.assertEqual(result[0]['n_total'], 2)
+        self.assertEqual(result[0]['n_remaining'], 1)
+        

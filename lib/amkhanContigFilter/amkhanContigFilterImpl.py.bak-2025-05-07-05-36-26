@@ -29,8 +29,8 @@ This sample module contains one small method that filters contigs.
     # the latter method is running.
     ######################################### noqa
     VERSION = "0.0.1"
-    GIT_URL = "https://github.com/khanahmedm/amkhanContigFilter.git"
-    GIT_COMMIT_HASH = "d9ba55e2f8de9aa8b229edebf814bfcdd787546b"
+    GIT_URL = ""
+    GIT_COMMIT_HASH = ""
 
     #BEGIN_CLASS_HEADER
     # Class variables and functions can be defined in this block
